@@ -1,0 +1,83 @@
+body {
+    font-family: "Outfit", sans-serif;
+    font-weight: lighter;
+    font-size: medium;
+    background-position: left bottom, right 70px;
+    background-repeat: no-repeat;
+    background-size: 15%;
+}
+
+.modal-body, .modal-header {
+    font-family: "Outfit", sans-serif;
+    font-weight: 100;
+}
+
+.modal-footer {
+    /* want the button row of modal to be transparent */
+    background: transparent;
+}
+
+.modal-body {
+    /* making sure the modal has a nice rounded bottom */
+    border-bottom-right-radius: var(--bs-modal-border-radius);
+    border-bottom-left-radius: var(--bs-modal-border-radius);
+}
+
+.modal-content, .modal-body, .modal-header, .modal-footer {
+    /* remove all dividing borders between the different parts of the modal */
+    border: none;
+}
+
+.modal-dialog, .modal-content {
+    max-width: fit-content;
+}
+
+.light {
+    font-weight: 100; /*light weight*/
+}
+
+#medium {
+    font-weight: 500;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+h1 {
+    font-family: "Poiret One", sans-serif;
+}
+
+button.themed-color {
+    background-color: rgb(64,183,252);
+    color: white;
+}
+
+.themed-link-color {
+    color: rgb(64,183,252);
+}
+
+a.card-link {
+    color: rgb(64,183,252);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+button.themed-color:hover {
+    background-color: rgb(64,183,252);
+    color: white;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.padding {
+    padding: 10px;
+}
+
+button {
+    margin-right: 8px;
+}
