@@ -1,39 +1,68 @@
 body {
     font-family: "Outfit", sans-serif;
+    font-weight: 400;
+    font-style: normal;
     font-weight: lighter;
     font-size: medium;
-    background-position: left bottom, right 70px;
     background-repeat: no-repeat;
-    background-size: 15%;
+    background-image: url('../images/Background\ Short\ V1.2\ -\ 100\ Opacity.png');
+    background-size: cover;
+}
+
+h1.subtitle {
+    font-family: "Poiret One", sans-serif;
+}
+
+h1.modal-title {
+    font-family: "Outfit", sans-serif;
+}
+
+.light-mode {
+    background-color: #e7e4ea;
+    color: black;
+} 
+
+.dark-mode {
+    background-color: black;
+    color: #dbdbde;
+}
+
+.logo { 
+    width: 50%;
 }
 
 .modal-body, .modal-header {
+    background-color: #dbdbde;
+    color: #333e48;
     font-family: "Outfit", sans-serif;
-    font-weight: 100;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
 }
+
+#cip-details-error-list.table {
+    background-color: #dbdbde;
+    color: #333e48;
+    font-family: "Outfit", sans-serif;
+}
+
 
 .modal-footer {
     /* want the button row of modal to be transparent */
     background: transparent;
 }
 
-.modal-body {
-    /* making sure the modal has a nice rounded bottom */
-    border-bottom-right-radius: var(--bs-modal-border-radius);
-    border-bottom-left-radius: var(--bs-modal-border-radius);
-}
-
 .modal-content, .modal-body, .modal-header, .modal-footer {
     /* remove all dividing borders between the different parts of the modal */
     border: none;
+
 }
 
-.modal-dialog, .modal-content {
-    max-width: fit-content;
+.modal-dialog {
+    max-width: max-content;
 }
 
 .light {
-    font-weight: 100; /*light weight*/
+    font-weight: 300; /*light weight*/
 }
 
 #medium {
@@ -45,39 +74,213 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
+input.form-control {
+    background-color: #dbdbde;
+    color: #7d8288;
+    font-weight: 800;
+    font-family: "Outfit", sans-serif;
+    border-color: #dbdbde !important;
+    border-radius: 0;
+}
+
+.input-group.dark-mode.inactive {
+    opacity: 60%;
+}
+
+.input-group.light-mode.inactive {
+    border-bottom-color: black !important;
+    opacity: 40% !important;
+}
+
+.input-group.light-mode {
+    border: solid;
+    border-color: #dbdbde ;
+    border-bottom-color: black !important;
+    border-width: 2;
+}
+
+.dummy_field_input {
+    background-color: #dbdbde;
+    color: #7d8288;
+    border-color: #dbdbde !important;
+}
+
 h1 {
     font-family: "Poiret One", sans-serif;
 }
 
-button.themed-color {
-    background-color: rgb(64,183,252);
-    color: white;
+button {
+    background-color: #c2c6d0;
+    color: #333e48;
+    font-weight: 800;
+    font-family: "Outfit", sans-serif;
+    border: none;
+    border-radius: 0;
+}
+
+div.search-fields {
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 60%;
 }
 
 .themed-link-color {
     color: rgb(64,183,252);
 }
 
-a.card-link {
-    color: rgb(64,183,252);
+.verification-box {
+    padding-top: 20px;
+}
+
+.tbody {
+    border: none !important;
+    border-spacing: 0px !important;
+    padding: 0px;
+}
+
+.item-name {
+    background-color: #dbdbde;
+    color:#62686f;
+    text-align: right;
+    padding-right: 5px;
+    padding-left:10px;
+    vertical-align: text-top;
+}
+
+.top-row {
+    padding-top:20px;
+}
+
+.bottom-row {
+    padding-bottom:20px;
+}
+
+td.item-text {
+    background-color: #cfcfcf;
+    text-align: left;
+    padding-left: 5px;
+    padding-right: 10px;
+    color: #333e48;
+}
+
+tbody > tr > td {
+    background-color: #cfcfcf;
+}
+
+tbody > tr {
+    background-color: #dbdbde;
+}
+
+
+.item-text.successful {
+    color: #009542
+}
+
+.item-text.failed {
+    color: #da2128;
+}
+
+.collection-banner {
+    background-color:#404040;
+    color:#c3c6d0;
+    text-align: center;
+}
+
+.collection-icon {
+    background-color: #7e7e7e;
+    color: #bec1c9;
+    text-align: center;
+}
+
+.non-cip88-header {
+    background-color: #f4882f;
+}
+
+a.box-link {
+    color: #006cb7;
     text-decoration: none;
-    font-weight: 500;
-}
-
-button.themed-color:hover {
-    background-color: rgb(64,183,252);
-    color: white;
-}
-
-.modal-title {
-    font-weight: bold;
-    font-size: larger;
+    font-weight: 300;
+    font-family: "Outfit", sans-serif;
 }
 
 .padding {
     padding: 10px;
 }
 
-button {
-    margin-right: 8px;
+.show-hover-pointer {
+    cursor: pointer;
+}
+
+a.link-row.light-mode {
+    background-color: #c2c6d0;
+    color: #525457;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 800;
+}
+
+a.link-row.dark-mode {
+    background-color: #c2c6d0;
+    color: #525457;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 800;
+}
+
+nav.link-row.light-mode {
+    background-color: #c2c6d0;
+    color: #525457;
+    margin-bottom: 20px;
+    margin-left: 15%;
+    margin-right: 15%;
+    --bs-navbar-padding-y:0;
+}
+
+nav.link-row.dark-mode {
+    background-color: #c2c6d0;
+    color: #525457;
+    margin-bottom: 20px;
+    margin-left: 15%;
+    margin-right: 15%;
+    --bs-navbar-padding-y:0;
+}
+
+a {
+    color: inherit;
+}
+
+svg.dark-mode, svg.light-mode {
+    background-color: transparent; 
+}
+
+#top-of-page {
+    margin-right: 15%;
+}
+
+a:hover {
+    color: inherit;
+}
+
+a.link-row.light-mode:hover {
+    background-color: #dbdbde;
+    color: #525457;
+    text-decoration: none;
+}
+
+a.link-row.dark-mode:hover {
+    background-color: #dbdbde;
+    color: #525457;
+    text-decoration: none;
+}
+
+.about-section {
+    text-align: left; 
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-bottom: 0.5cm;
+}
+
+.material-symbols-outlined {
+    font-size: 40px;
 }

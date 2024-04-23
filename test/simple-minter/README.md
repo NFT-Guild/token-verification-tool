@@ -1,1 +1,0 @@
-# About the Simple Minter

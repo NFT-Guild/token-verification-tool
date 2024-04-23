@@ -8,18 +8,15 @@ router.post('/', function (req, res, next) {
     const koios_api_url = app.get('koios_api_url');
     
     const xhr = new XMLHttpRequest();
-    
-    const asset_policyid = req.body.asset_policyid;
-    
-    const asset_name = req.body.asset_name;
-    
-    const asset_list = [[asset_policyid, asset_name]];
+    const asset_list = req.body.asset_list;
     
     const koiosparams = `{"_asset_list":${JSON.stringify(asset_list)}}`;
     
+    // https://api.koios.rest/#post-/asset_info
     xhr.open('POST', `${koios_api_url}/asset_info`, true);
 
     xhr.onload = function () {
+
         res.json(JSON.parse(xhr.response));
     }
 

@@ -52,8 +52,8 @@ router.get('/', function (req, res, next) {
     }
     // cookie end
 
-    res.render('index', {
-        title: 'Token Verification Tool',
+    res.render('about', {
+        title: 'About Token Verification Tool',
         navWebpage: app.get('navWebpage'),
         navTwitter: app.get('navTwitter'),
         navDiscord: app.get('navDiscord'), 

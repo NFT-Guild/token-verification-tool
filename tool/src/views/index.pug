@@ -1,23 +1,69 @@
 html
    head
       title= title
+      link(rel="preconnect" href="https://fonts.googleapis.com")
+      link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+      link(href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet")
       link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous")
+      link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0")
       link(rel="stylesheet" type="text/css" href="stylesheets/styles.css")
       script(src="/javascripts/helpers.js")
-   body
-      h1= title
-      div(class="d-flex flex-row justify-content-end padding" width="70%")
-         div(class="input-group mb-3")
-            span(class=`input-group-text` id="basic-addon3") POLICY ID
-            input(type="text" class=`form-control textfield` id="policyidInput" aria-describedby="basic-addon3")
-         div(class="input-group mb-3")
-            span(class=`input-group-text` id="basic-addon3") TOKEN NAME
-            input(type="text" class=`form-control textfield` id="tokennameInput" aria-describedby="basic-addon3")
-         button(type="button" class=`btn themed-color` id="loadTokenInfoButton" onclick=`const policyid = document.getElementById('policyidInput').value; const tokenname = document.getElementById('tokennameInput').value; getAssetInfo(policyid, tokenname, 'token-info');`) LOAD
+   body(class=`${themeclass}`)
+      div(id="topofpage")
+      div(class="d-flex flex-row justify-content-around padding")
+         div(class="name-and-logo" class="justify-content-start show-hover-pointer" onclick="location.href='/'")
+            img(src=`/images/NFT Verification.png` width="600px" style="float: right")
+            br
+            h1(style="float: right" class="subtitle") by The NFT Guild
+         div(class="justify-content-end")
+            if themeclass == "dark-mode"
+               span(class="material-symbols-outlined show-hover-pointer" onclick="setCookie('verification_tool_theme', 'light-mode'); location.reload();") light_mode
+            else if themeclass == "light-mode"
+               span(class="material-symbols-outlined show-hover-pointer" onclick="setCookie('verification_tool_theme', 'dark-mode'); location.reload();") dark_mode
+               
+      div(class="light" style="display: none; margin-bottom: 10px; text-align: center;" id="search_tokens_label") Search for the tokens you want to verify
+      div(id="search_fields" style="display: none;" class="search-fields")
+         div(class=`input-group mb-3 ${themeclass}`)
+            input(type="text" id="policyidInput" class=`form-control` placeholder="POLICY ID" aria-label="POLICY ID" aria-describedby="basic-addon2")
+            span(class=`dummy_field_input padding material-symbols-outlined`) search
+         div(id="asset_name_fields")
+         
+         button(type="button" class="padding" style="float: right" id="loadTokenInfoButton" onclick=`const cipsToCheck = [25, 27, 68, 88]; getAssetInfo('policyidInput', 'assetnameInput_', cipsToCheck.includes(27)).then((assetInfo) => { hideSearchFields(); toVerificationBoxes(assetInfo, cipsToCheck, 'verification-box-list')});`) SEARCH ASSET(s)
+         
+      div(id="verification-box-list")
 
-      div(class="nft-list light d-flex mb-3 flex-row flex-wrap" id="token-info")
+      div(class="modal modal-dialog modal-xl fade" id="cipDetails" tabindex="-1" aria-labelledby="cipDetailsLabel" aria-hidden="true")
+         div(class="modal-dialog")
+            div(class="modal-content")
+               div(class="modal-header message-box-header")
+                  button(type="button" class=`btn-close` data-bs-dismiss="modal" aria-label="Close")
+               div(class="modal-body")
+                  div(id="cip-details-metadata-fields" style="display: none;")
+                     div(class="d-flex flex-row")
+                        h1(class="modal-title fs-5 padding" id="cipDetailsLabel") METADATA
+                     div(class="light flex-wrap" id="cip-details-metadata") Metadata here ...
+                  div(id="cip-details-error-fields")
+                     div(class="d-flex flex-row")
+                        h1(class="modal-title fs-5 padding" id="cipDetailsLabel" style="color: red;") ERRORS
+                     div(class="light flex-wrap") 
+                        div(id="cip-details-error-list") Errors go here ...
+                  div(class="d-flex flex-row justify-content-end" style="padding-top:15px;")
+                     button(type="button" class="padding" data-bs-dismiss="modal") OK
+               div(class="message-box-footer")
+      br
+      br
+      div(class="d-flex flex-row justify-content-end padding")
+         a(href=`#topofpage` id="top-of-page")
+            span(class="material-symbols-outlined") upgrade
+         
+      nav(class=`navbar sticky-bottom d-flex flex-row justify-content-center flex-nowrap link-row ${themeclass}`)
+         a(href="/about" class=`link-row ${themeclass} flex-fill padding`) ABOUT
+         a(href=`${navWebpage}` target="_blank" class=`link-row ${themeclass} flex-fill padding`) WEBPAGE
+         a(href=`${navTwitter}` target="_blank" class=`link-row ${themeclass} flex-fill padding`) TWITTER
+         a(href=`${navDiscord}` target="_blank" class=`link-row ${themeclass} flex-fill padding`) DISCORD
 
+      -var onloadScript = `window.onload=function() { addAssetNameField('${themeclass}', 'asset_name_fields'); addAssetNameField('${themeclass}', 'asset_name_fields'); setFieldInactive(numAssetFields); showSearchFields(); /*addEnterKeyListener(searchField, searchButton);*/ }`;
+      script !{onloadScript}
       
       script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous")
       script(type="module" src="javascripts/wallet-integration.js")
-      script(src="https://cdn.jsdelivr.net/npm/@stricahq/typhonjs@1.2.8/dist/index.min.js")

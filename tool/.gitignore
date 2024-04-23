@@ -1,6 +1,4 @@
 node_modules
 *.key
 *.pem
-api_check_signature.js
-check_hash.js
-check_signature.js
+design
