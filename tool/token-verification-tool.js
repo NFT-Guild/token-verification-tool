@@ -16,6 +16,11 @@ var indexRouter = require('./src/routes/index');
 var aboutRouter = require('./src/routes/about');
 var apiTxStatusRouter = require('./src/koios_api/api_tx_status');
 var apiAssetInfoRouter = require('./src/koios_api/api_asset_info');
+var apiAssetByFingerprintRouter = require('./src/scan_api/api_asset_by_fingerprint');
+var apiComplianceCheckCIP25Router = require('./src/public_api/check_cip25_compliance');
+var apiComplianceCheckCIP27Router = require('./src/public_api/check_cip27_compliance');
+var apiComplianceCheckCIP68Router = require('./src/public_api/check_cip68_compliance');
+var apiComplianceCheckCIP88Router = require('./src/public_api/check_cip88_compliance');
 var apiCIP88CertificateRouter = require('./src/public_api/get_cip88_certificate');
 var apiCIP88VerificationRouter = require('./src/public_api/verify_cip88_certificate');
 
@@ -33,6 +38,12 @@ const options = {
         servers: [
             {
                 url: 'https://bi-preprod.stakepoolcentral.com:11451/' 
+            },
+            {
+                url: 'https://bi.stakepoolcentral.com:11451/' 
+            },
+            {
+                url: 'https://verify.nft-guild.io/' 
             }
         ]
     },
@@ -53,6 +64,11 @@ app.use('/', indexRouter);
 app.use('/about', aboutRouter);
 app.use('/api_tx_status', apiTxStatusRouter);
 app.use('/api_asset_info', apiAssetInfoRouter);
+app.use('/api_asset_by_fingerprint', apiAssetByFingerprintRouter);
+app.use('/check_cip25_compliance', apiComplianceCheckCIP25Router);
+app.use('/check_cip27_compliance', apiComplianceCheckCIP27Router);
+app.use('/check_cip68_compliance', apiComplianceCheckCIP68Router);
+app.use('/check_cip88_compliance', apiComplianceCheckCIP88Router);
 app.use('/get_cip88_certificate', apiCIP88CertificateRouter);
 app.use('/verify_cip88_certificate', apiCIP88VerificationRouter);
 
@@ -85,9 +101,15 @@ app.set('verification_tool_theme', 'dark-mode')
 
 ////////////////////////////////////////////
 // KOIOS MAINNET / PREPROD SETTING - CHANGE TO YOUR DESIRED ENVIRONMENT
-//const koios_api_url = 'https://api.koios.rest/api/v1'; // mainnet
-const koios_api_url = 'https://preprod.koios.rest/api/v1'; // preproduction
+const koios_api_url = 'https://api.koios.rest/api/v1'; // mainnet
+// const koios_api_url = 'https://preprod.koios.rest/api/v1'; // preproduction
 app.set('koios_api_url', koios_api_url);
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+// CARDANOSCAN API
+const scan_api_url = 'https://api.cardanoscan.io/api/v1/'; // mainnet
+app.set('scan_api_url', scan_api_url);
 ////////////////////////////////////////////
 
 ////////////////////////////////////////////

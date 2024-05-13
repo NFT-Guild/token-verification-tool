@@ -24,12 +24,13 @@ html
       div(class="light" style="display: none; margin-bottom: 10px; text-align: center;" id="search_tokens_label") Search for the tokens you want to verify
       div(id="search_fields" style="display: none;" class="search-fields")
          div(class=`input-group mb-3 ${themeclass}`)
-            input(type="text" id="policyidInput" class=`form-control` placeholder="POLICY ID" aria-label="POLICY ID" aria-describedby="basic-addon2")
+            input(type="text" id="assetInfoInput_1" class=`form-control` placeholder="ASSET ID OR FINGERPRINT 1" aria-label="ASSET INFO 1" aria-describedby="basic-addon2")
             span(class=`dummy_field_input padding material-symbols-outlined`) search
-         div(id="asset_name_fields")
+         div(id="asset_info_fields")
          
-         button(type="button" class="padding" style="float: right" id="loadTokenInfoButton" onclick=`const cipsToCheck = [25, 27, 68, 88]; getAssetInfo('policyidInput', 'assetnameInput_', cipsToCheck.includes(27)).then((assetInfo) => { hideSearchFields(); toVerificationBoxes(assetInfo, cipsToCheck, 'verification-box-list')});`) SEARCH ASSET(s)
+         button(type="button" class="padding" style="float: right" id="loadTokenInfoButton" onclick=`const cipsToCheck = [25, 27, 68, 88]; getAssetInfo('assetInfoInput_', cipsToCheck.includes(27)).then((assetInfo) => { if(assetInfo.length < 1) { alert('No assets fit the entered values'); return; } hideSearchFields(); toVerificationBoxes(assetInfo, cipsToCheck, 'verification-box-list')});`) SEARCH ASSET(s)
          
+
       div(id="verification-box-list")
 
       div(class="modal modal-dialog modal-xl fade" id="cipDetails" tabindex="-1" aria-labelledby="cipDetailsLabel" aria-hidden="true")
@@ -62,7 +63,7 @@ html
          a(href=`${navTwitter}` target="_blank" class=`link-row ${themeclass} flex-fill padding`) TWITTER
          a(href=`${navDiscord}` target="_blank" class=`link-row ${themeclass} flex-fill padding`) DISCORD
 
-      -var onloadScript = `window.onload=function() { addAssetNameField('${themeclass}', 'asset_name_fields'); addAssetNameField('${themeclass}', 'asset_name_fields'); setFieldInactive(numAssetFields); showSearchFields(); /*addEnterKeyListener(searchField, searchButton);*/ }`;
+      -var onloadScript = `window.onload=function() { addAssetInfoField('${themeclass}', 'asset_info_fields'); setFieldInactive(numAssetFields); showSearchFields(); /*addEnterKeyListener(searchField, searchButton);*/ }`;
       script !{onloadScript}
       
       script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous")

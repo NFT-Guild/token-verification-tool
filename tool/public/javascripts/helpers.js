@@ -1,107 +1,3 @@
-/*const CIP68METADATATEMPLATE = { 
-    "name": "CENT NFT 1",
-    "image": "https://cent.stakepoolcentral.com/resources/SPC.png",
-    "description": "CENT CIP68 NFT"
-}
-
-const CIP88METADATATEMPLATE = {
-    0: 1,
-    1: {
-        1: [
-            0,
-            '3668b628d7bd0cbdc4b7a60fe9bd327b56a1902e89fd01251a34c8be',
-            '8200581c4bdb4c5017cdcb50c001af21d2488ed2e741df55b252dd3ab2482050'
-        ],
-        2: [
-            25,
-            27
-        ],
-        3: [0],
-        4: 12345,
-        5: [
-            "https://",
-            "oracle.mycoolnftproject.io/"
-        ],
-        6: {
-            25: {
-                0: 1,
-                1: {
-                    0: "Cool NFT Project",
-                    1: [
-                        "This is a description of my project",
-                        "longer than 64 characters so broken up into a string array"
-                    ],
-                    2: [
-                        "https://",
-                        "static.coolnftproject.io",
-                        "/images/icon.png"
-                    ],
-                    3: [
-                        "https://",
-                        "static.coolnftproject.io",
-                        "/images/banner1.jpg"
-                    ],
-                    4: 0,
-                    5: [
-                        [
-                            "twitter",
-                            [
-                                "https://",
-                                "twitter.com/spacebudzNFT"
-                            ]
-                        ],
-                        [
-                            "discord",
-                            [
-                                "https://",
-                                "discord.gg/spacebudz"
-                            ]
-                        ]
-                    ],
-                    6: "Virtua Metaverse"
-                }
-            },
-            27: {
-                0: 1,
-                1: {
-                    1: "0.05",
-                    2: [
-                        "addr_test1qqp7uedmne8vjzue66hknx87jspg56qhkm4gp6ahyw7kaahevmtcux",
-                        "lpy25nqhaljc70094vfu8q4knqyv6668cvwhsq64gt89"
-                    ]
-                }
-            }
-        }
-    },
-    2: [
-        [
-            '02b76ae694ce6549d4a20dce308bc7af7fa5a00c7d82b70001e044e596a35deb',
-            '23d0614301b0d554def300388c2e36b702a66e85432940f703a5ba93bfb1659a',
-            '0717962b40d87523c507ebe24efbb12a2024bb8b14441785a93af00276a32e08'
-        ],
-        [
-            '26bacc7b88e2b40701387c521cd0c50d5c0cfa4c6c6d7f0901395757',
-            'secondWitnessByteString...split into 2 because length of',
-            'signatures are 128 bytes long ..........................'
-        ]
-    ]
-}
-*/
-
-// async function connectwallet(name) {
-//     const api = await window.cardano[name].enable();
-// }
-
-/*
-function truncate(fullStr, strLen, separator) {
-    if (fullStr.length <= strLen) return fullStr; separator = separator || '...';
-    var sepLen = separator.length;
-    var charsToShow = strLen - sepLen;
-    var frontChars = Math.ceil(charsToShow / 2);
-    var backChars = Math.floor(charsToShow / 2);
-    return fullStr.substr(0, frontChars) + separator + fullStr.substr(fullStr.length - backChars);
-};*/
-
 function showElem(elemid) {
     document.getElementById(elemid).style.display = '';
 }
@@ -112,6 +8,9 @@ function hideElem(elemid) {
 
 var validatorName = '';
 var validatorUTxOList = '';
+const cip68RefTokenLabelUTF8 = '000643b0';
+const cip68UserTokenLabelsUTF8 = ["000de140","0014df10","001bc280"];
+const cip68TokenTypes = [222, 333, 444];
 
 
 function setCookie(cookiename, value) {
@@ -139,13 +38,10 @@ async function getVerificationBoxHTML(assetInfo, cip27Asset, cip68RefTokens, com
     
     //TODO: Remove cip68RefTokens parameter if it turns out to be N/A. Keeping it here for now in the event that it can be used for any verification status info
     if(complianceReport['68'].metadata != null) {
-        // this is a cip 68 NFT. disregard cip 88
+        // this is a cip 68 NFT. disregard cip 25 and cip 88
+        disregardCIPs.push('25');
         disregardCIPs.push('88');
     }
-    // else if(complianceReport['88'].metadata != null){
-    //     // this is a cip 88 NFT. disregard cip 68
-    //     disregardCIPs.push('68');
-    // }
     else if(complianceReport['25'].metadata != null) {
         // this is a cip 25 NFT. disregard cip 68 and cip 88
         disregardCIPs.push('68');
@@ -189,7 +85,7 @@ async function getVerificationBoxHTML(assetInfo, cip27Asset, cip68RefTokens, com
         if(rate != null) {
             // rate found
             ratePct = parseFloat(rate) * 100;
-            cipRoyaltyRate += `">${ratePct}%`
+            cipRoyaltyRate += `">${ratePct.toFixed(2)}%`
         }
         else {
             // rate not found
@@ -203,6 +99,8 @@ async function getVerificationBoxHTML(assetInfo, cip27Asset, cip68RefTokens, com
     cipRoyaltyRate += "</td>";
 
     var asset_name = getAssetName(complianceReport);
+
+    var website = getWebsite(complianceReport);
 
     var twitter = getTwitter(complianceReport);
     
@@ -219,6 +117,7 @@ async function getVerificationBoxHTML(assetInfo, cip27Asset, cip68RefTokens, com
                 <tr><th class="item-name top-row">NAME :</th><td class="item-text top-row">${asset_name}</td></tr>
                 <tr><th class="item-name">ROYALTY RATE :</th>${cipRoyaltyRate}</tr>
                 <tr><th class="item-name">CIP COMPLIANCE :</th><td class="item-text"><div class="d-flex justify-content-start item-text successful">${compliantCIPs.substring(1)}</div>${nonCompliantCIPs}</td></tr>
+                <tr><th class="item-name">WEBSITE :</th><td class="item-text">${website}</td></tr>
                 <tr><th class="item-name">TWITTER :</th><td class="item-text">${twitter}</td></tr>
                 <tr><th class="item-name bottom-row">DISCORD :</th><td class="item-text bottom-row">${discord}</td></tr>
             </table>
@@ -236,17 +135,18 @@ async function getVerificationBoxHTML(assetInfo, cip27Asset, cip68RefTokens, com
         
         const scope = payload['1'];
 
-        if(scope[0] == '0') {
-            const cip88VerificationReport = await verifyCIP88Cert(payload, witnesses);
+        if (scope[0] == '0') {
+            await verifyCIP88Cert(payload, witnesses, (report) => {
+                nativeScriptPolicyIdMatch = report.policyIdMatch;
 
-            nativeScriptPolicyIdMatch = cip88VerificationReport.policyIdMatch;
+                const wValidation = report.witnessValidation;
+                for (var x = 0; x < wValidation.length; x++) {
+                    // Looping through all witness signatures and checking they are made by one of the required signers and that it is valid
+                    // If one is invalid, the isOwnerAndValidSignature will be false
+                    isOwnerAndValidSignature = isOwnerAndValidSignature && wValidation[x].requiredSigner && wValidation[x].witnessSignatureValid;
+                }
+            });
 
-            const wValidation = cip88VerificationReport.witnessValidation;
-            for(var x = 0; x < wValidation.length; x++) {
-                // Looping through all witness signatures and checking they are made by one of the required signers and that it is valid
-                // If one is invalid, the isOwnerAndValidSignature will be false
-                isOwnerAndValidSignature = isOwnerAndValidSignature && wValidation[x].requiredSigner && wValidation[x].witnessSignatureValid;
-            }
         }
         else {
             // currently only native scripts witnesses are supported by CIP 88
@@ -270,6 +170,7 @@ async function getVerificationBoxHTML(assetInfo, cip27Asset, cip68RefTokens, com
                 <tr><th class="item-name">PUBKEY HASH :</th><td class="item-text ${isOwnerAndValidSignature ? 'successful' : 'failed'}">${isOwnerAndValidSignature ? 'MATCHES SCRIPT' : 'NOT MATCHING SCRIPT'}</td></tr>
                 <tr><th class="item-name">ROYALTY RATE :</th>${cipRoyaltyRate}</tr>
                 <tr><th class="item-name">CIP COMPLIANCE :</th><td class="item-text"><div class="d-flex justify-content-start item-text successful">${compliantCIPs.substring(1)}</div>${nonCompliantCIPs}</td></tr>
+                <tr><th class="item-name">WEBSITE :</th><td class="item-text">${website}</td></tr>
                 <tr><th class="item-name">TWITTER :</th><td class="item-text">${twitter}</td></tr>
                 <tr><th class="item-name bottom-row">DISCORD :</th><td class="item-text bottom-row">${discord}</td></tr>
             </table>
@@ -452,7 +353,7 @@ function getCIP88ProjectBannerURL(metadata) {
 
 function getCIP25Discord(metadata) {
     // in CIP 25 discord is in a named property
-    const cip25Discord = ["discord"];
+    const cip25Discord = ["discord", "Discord"];
     var discord = null;
     for(var i = 0; i < cip25Discord.length; i++) {
         if(metadata.hasOwnProperty(cip25Discord[i])) {
@@ -465,7 +366,7 @@ function getCIP25Discord(metadata) {
 
 function getCIP25Twitter(metadata) {
     // in CIP 25 twitter is in a named property
-    const cip25Twitter = ["twitter", "twitter2", "x-Artist"];
+    const cip25Twitter = ["twitter", "twitter2", "x-Artist", "Twitter", "Twitter2", "X-Artist"];
     var twitter = null;
     for(var i = 0; i < cip25Twitter.length; i++) {
         if(metadata.hasOwnProperty(cip25Twitter[i])) {
@@ -474,6 +375,19 @@ function getCIP25Twitter(metadata) {
         }
     }
     return twitter;
+}
+
+function getCIP25Website(metadata) {
+    // in CIP 25 website is in a named property
+    const cip25Website = ["website", "site", "web", "Website", "Site", "Web"];
+    var website = null;
+    for(var i = 0; i < cip25Website.length; i++) {
+        if(metadata.hasOwnProperty(cip25Website[i])) {
+            website = metadata[`${cip25Website[i]}`];
+            break;
+        }
+    }
+    return website;
 }
 
 function getCIP88SocialMedia(metadata, protocol) {
@@ -511,18 +425,40 @@ function getCIP88SocialMedia(metadata, protocol) {
 
 function getAssetName(complianceReport) {
     var asset_name = null;
-    if(complianceReport[25].metadata != null) {
-        // CIP 25
-        asset_name = complianceReport[25].metadata.name;
-    }
-    else if(complianceReport[68].metadata != null) {
+    
+    if(complianceReport[68].metadata != null) {
         // CIP 68...follows CIP 25 metadata structure
         asset_name = complianceReport[68].metadata.name;
+    }
+    else if(complianceReport[25].metadata != null) {
+        // CIP 25
+        asset_name = complianceReport[25].metadata.name;
     }
     
     if(asset_name == null) return `NOT FOUND IN METADATA`;
 
     return asset_name;
+}
+
+function getWebsite(complianceReport) {
+    var website = null;
+    if(complianceReport[88].metadata != null) {
+        // CIP 88
+        const cipDetails = complianceReport[88].metadata['1']['6'];
+        website = getCIP88SocialMedia(cipDetails, 'website');
+    }
+    else if(complianceReport[68].metadata != null) {
+        // CIP 68...follows CIP 25 metadata structure
+        website = getCIP25Website(complianceReport[68].metadata);
+    }
+    else if(complianceReport[25].metadata != null) {
+        // CIP 25
+        website = getCIP25Website(complianceReport[25].metadata);
+    }
+    
+    if(website == null) return `NOT FOUND IN METADATA`;
+
+    return `<a href="${website}" target="_blank" class="box-link">${website}</a>`;
 }
 
 function getTwitter(complianceReport) {
@@ -532,19 +468,29 @@ function getTwitter(complianceReport) {
         const cipDetails = complianceReport[88].metadata['1']['6'];
         twitter = getCIP88SocialMedia(cipDetails, 'twitter');
     }
-    else if(complianceReport[25].metadata != null) {
-        // CIP 25
-        twitter = getCIP25Twitter(complianceReport[25].metadata);
-    }
     else if(complianceReport[68].metadata != null) {
         // CIP 68...follows CIP 25 metadata structure
         twitter = getCIP25Twitter(complianceReport[68].metadata);
+    }
+    else if(complianceReport[25].metadata != null) {
+        // CIP 25
+        twitter = getCIP25Twitter(complianceReport[25].metadata);
     }
     
     if(twitter == null) return `NOT FOUND IN METADATA`;
 
     twitterAccount = twitter.substring(twitter.lastIndexOf('/')+1);
-    return `<a href="${twitter}" target="_blank" class="box-link">@${twitterAccount.toUpperCase()}</a>`;
+    if(twitterAccount.indexOf('@') == -1) {
+        twitterAccount = '@'+ twitterAccount;
+    }
+
+    // clean up link and account
+    if(twitter.indexOf('@') == 0) {
+        // user name provided...change to link format
+        twitter = 'https://www.x.com/'+ twitter.substring(1);
+    }
+
+    return `<a href="${twitter}" target="_blank" class="box-link">${twitterAccount.toUpperCase()}</a>`;
 }
 
 function getDiscord(complianceReport) {
@@ -554,13 +500,13 @@ function getDiscord(complianceReport) {
         const cipDetails = complianceReport[88].metadata['1']['6'];
         discord = getCIP88SocialMedia(cipDetails, 'discord');
     }
-    else if(complianceReport[25].metadata != null) {
-        // CIP 25
-        discord = getCIP25Discord(complianceReport[25].metadata);
-    }
     else if(complianceReport[68].metadata != null) {
         // CIP 68...follows CIP 25 metadata structure
         discord = getCIP25Discord(complianceReport[68].metadata);
+    }
+    else if(complianceReport[25].metadata != null) {
+        // CIP 25
+        discord = getCIP25Discord(complianceReport[25].metadata);
     }
     
     if(discord == null) return `NOT FOUND IN METADATA`;
@@ -630,11 +576,19 @@ function cip25Compliance(assetInfo) {
         // the asset_name must be utf-8 encoded and in text format for the key in the metadata map
         if(metadata['721'][`${assetInfo.policy_id}`] == null) {
             errors.push("Policy id not formatted according to version 1 of CIP25");
+            // metadata not correctly formatted. No need to continue from this point
+            return {errors: errors, metadata: metadata};
         }
         policyMetadata = metadata['721'][`${assetInfo.policy_id}`];
-
-        if(policyMetadata[`${assetInfo.asset_name_ascii}`] == null) {
+        if(policyMetadata == null) {
+            errors.push("Asset metadata not formatted according to version 1 of CIP25");
+            // metadata not correctly formatted. No need to continue from this point
+            return {errors: errors, metadata: metadata};
+        }
+        else if(policyMetadata[`${assetInfo.asset_name_ascii}`] == null) {
             errors.push("Asset name not formatted according to version 1 of CIP25");
+            // metadata not correctly formatted. No need to continue from this point
+            return {errors: errors, metadata: metadata};
         }
         
         assetMetadata = policyMetadata[`${assetInfo.asset_name_ascii}`];
@@ -644,12 +598,21 @@ function cip25Compliance(assetInfo) {
         // the policy_id must be in raw bytes format
         // the asset_name must be in raw bytes format
         if(metadata['721'][`${assetInfo.policy_id}`] == null) {
-            errors.push("Policy id not formatted according to version 1 of CIP25");
+            errors.push("Policy id not formatted according to version 2 of CIP25");
+            // metadata not correctly formatted. No need to continue from this point
+            return {errors: errors, metadata: metadata};
         }
         policyMetadata = metadata['721'][`${assetInfo.policy_id}`];
 
-        if(policyMetadata[`${assetInfo.asset_name}`] == null) {
-            errors.push("Asset name not formatted according to version 1 of CIP25");
+        if(policyMetadata == null) {
+            errors.push("Asset metadata not formatted according to version 2 of CIP25");
+            // metadata not correctly formatted. No need to continue from this point
+            return {errors: errors, metadata: metadata};
+        }
+        else if(policyMetadata[`${assetInfo.asset_name}`] == null) {
+            errors.push("Asset name not formatted according to version 2 of CIP25");
+            // metadata not correctly formatted. No need to continue from this point
+            return {errors: errors, metadata: metadata};
         }
         
         assetMetadata = policyMetadata[`${assetInfo.asset_name}`];
@@ -679,13 +642,14 @@ function cip68Compliance(assetInfo, cip68RefTokens) {
     }
 
     // CIP 68 metadata is handled by Koios API, but we do an additional verification that the ref token is in fact on chain
-    var tokenLabel = null; 
-    for(var i = 0; i < cip68UserTokenLabels.length; i++) {
-        label = cip68UserTokenLabels[i];
+    var tokenLabel = null;
+
+    for(var i = 0; i < cip68UserTokenLabelsUTF8.length; i++) {
+        label = cip68UserTokenLabelsUTF8[i];
         if(assetInfo.asset_name.startsWith(label)) {
             // this is a cip68 user token. Verify that we have a cip68RefToken
             tokenLabel = label;
-            if(!inAssetList(assetInfo.asset_name.replace(label, cip68RefTokenLabel), cip68RefTokens)) {
+            if(!inAssetList(assetInfo.asset_name.replace(label, cip68RefTokenLabelUTF8), cip68RefTokens)) {
                 errors.push("No CIP 68 ref token found on-chain");
             }
         }
@@ -698,10 +662,12 @@ function cip68Compliance(assetInfo, cip68RefTokens) {
 
     const cip68MetadataRaw = assetInfo.cip68_metadata;
     
-    const cip68TokenLabel = cip68TokenTypeFromLabel(tokenLabel);
-
+    const labelIndex = cip68UserTokenLabelsUTF8.indexOf(tokenLabel);
+    
+    const cip68TokenLabel = cip68TokenTypes[labelIndex];
+    
     const cip68Metadata = cip68MetadataRaw[cip68TokenLabel];
-
+    
     if(cip68Metadata == null) {
         errors.push('No CIP 68 metadata found for label '+ cip68TokenLabel)
         return {errors: errors, metadata: cip68Metadata};
@@ -712,9 +678,12 @@ function cip68Compliance(assetInfo, cip68RefTokens) {
         return {errors: errors, metadata: cip68Metadata};
     }
 
-    if(cip68Metadata.fields.length != 3 || cip68Metadata.constructor != 0) {
-        errors.push("CIP 68 metadata not structured correctly");
-        return {errors: errors, metadata: cip68Metadata};
+    if(cip68Metadata.constructor != 0) {
+        errors.push("CIP 68 metadata constructor shall value 0 but is "+ cip68Metadata.constructor);
+    }
+
+    if(cip68Metadata.fields.length != 3) {
+        errors.push("CIP 68 metadata fields shall be of length 3 but is of length "+ cip68Metadata.fields.length);
     }
 
     const token_metadata = cip68Metadata.fields[0];
@@ -1183,7 +1152,7 @@ function cip27Compliance(assetInfo) {
     const addr = royaltyMetadata['addr'];
     var royaltyRate = royaltyMetadata['rate'] != null ? royaltyMetadata['rate'] : royaltyMetadata['pct'];
     royaltyRate = parseFloat(royaltyRate)
-
+    
     if(isNaN(royaltyRate) || royaltyRate < 0.0) {
         errors.push(`Metadata does not specify any royalty rate.`);
     }
@@ -1211,7 +1180,7 @@ function cip88Ext_27Compliance(assetInfo) {
     }
 
     const royaltyDetails = assetInfo['1'];
-    //console.log('royaltyDetails', royaltyDetails);
+    
     if(royaltyDetails == null) {
         errors.push("CIP 27 Required field 1: &quot;Royalty Details&quot; missing");
         return errors;
@@ -1292,6 +1261,46 @@ function cip88Ext_102Compliance(assetInfo) {
     return [];
 }
 
+async function verifyCIP88Cert(payload, witnesses, callback) {
+
+    var response;
+    try {
+        response = await fetch(`/verify_cip88_certificate`, {
+            method: "POST", 
+            mode: "cors", 
+            cache: "no-cache", 
+            credentials: "same-origin", 
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            redirect: "follow", 
+            referrerPolicy: "no-referrer", 
+            body: `{"payload":${JSON.stringify(payload)}, "witnesses": ${JSON.stringify(witnesses)}}`, // body data type must match "Content-Type" header
+        });
+
+        const jsonData = await response.json();
+        callback(jsonData)
+    }
+    catch (err) {
+
+        const xhr = new XMLHttpRequest();
+        const koiosparams = `{"payload":${JSON.stringify(payload)}, "witnesses": ${JSON.stringify(witnesses)}}`;
+        
+        xhr.open('POST', `https://bi-preprod.stakepoolcentral.com:11451/verify_cip88_certificate`, true);
+
+        xhr.onload = function () {
+            const jsonData = JSON.parse(xhr.response)
+            callback(jsonData);
+        }
+
+        xhr.setRequestHeader('accept', 'application/json');
+        xhr.setRequestHeader('content-type', 'application/json');
+        xhr.send(koiosparams);
+    }
+
+    
+}
 
 async function cip88Compliance(assetInfo) {
     // https://github.com/cardano-foundation/CIPs/tree/master/CIP-0088
@@ -1446,7 +1455,7 @@ async function cip88Compliance(assetInfo) {
             if(complianceFunction != null) {
                 // TODO: Currently only the errors are kept...see if this is good enough
                 errors = errors.concat(
-                    complianceFunction(cipInfo[cip])/*.errors*/
+                    complianceFunction(cipInfo[cip])
                     );
             }
             else {
@@ -1484,8 +1493,8 @@ async function cip88Compliance(assetInfo) {
 
     if( scope[0] == '0') {
         // verify that policy script hex cbor is correctly representing the policy id 
-        await verifyCIP88Cert(regPayload, regWitness).then((report) => {
-        
+        await verifyCIP88Cert(regPayload, regWitness, (report) => {
+            
             if(!report.policyIdMatch) {
                 errors.push(`Registration Payload, &quot;1. Scope&quot; Policy id script doesn't match provided script`);
             }
@@ -1544,7 +1553,7 @@ function isHex(valueToCheck, length) {
 async function verifyCIPCompliance(assetInfo, cip27Asset, cip68RefTokens, checkCIPs) {
     
     const cipCompliance = {};
-
+    
     if(checkCIPs.includes(88)) {
         cipCompliance[88] = await cip88Compliance(assetInfo);
     }
@@ -1583,24 +1592,25 @@ async function verifyCIPCompliance(assetInfo, cip27Asset, cip68RefTokens, checkC
     return cipCompliance;
 }
 
-var numAssetFields = 0;
+var numAssetFields = 1;
 
 function setFieldInactive(fieldNumber) {
     document.getElementById(`inputgroup_${fieldNumber}`).classList.add('inactive');
-    document.getElementById(`assetnameInput_${fieldNumber}`).classList.add('inactive');
+    document.getElementById(`assetInfoInput_${fieldNumber}`).classList.add('inactive');
     document.getElementById(`dummyInput_${fieldNumber}`).classList.add('inactive');
 }
 
 function setFieldActive(fieldNumber) {
     document.getElementById(`inputgroup_${fieldNumber}`).classList.remove('inactive');
-    document.getElementById(`assetnameInput_${fieldNumber}`).classList.remove('inactive');
+    document.getElementById(`assetInfoInput_${fieldNumber}`).classList.remove('inactive');
     document.getElementById(`dummyInput_${fieldNumber}`).classList.remove('inactive');
 }
 
-function addAssetNameField(themeclass, elemid) {
+function addAssetInfoField(themeclass, elemid) {
+    
     numAssetFields++;
     var inputFieldHTML = `<div id="inputgroup_${numAssetFields}" class="input-group ${themeclass} mb-3">
-    <input type="text" id="assetnameInput_${numAssetFields}" class="form-control" placeholder="ASSET NAME ${numAssetFields}" aria-label="ASSET NAME ${numAssetFields}" aria-describedby="basic-addon2">
+    <input type="text" id="assetInfoInput_${numAssetFields}" class="form-control" placeholder="ASSET ID OR FINGERPRINT ${numAssetFields}" aria-label="ASSET INFO ${numAssetFields}" aria-describedby="basic-addon2">
     <span id="dummyInput_${numAssetFields}" class="dummy_field_input padding material-symbols-outlined">
         search
     </span>
@@ -1608,11 +1618,14 @@ function addAssetNameField(themeclass, elemid) {
     
     document.getElementById(elemid).innerHTML += inputFieldHTML; 
     
-    const newInputField = document.getElementById(`assetnameInput_${numAssetFields}`);
+    const newInputField = document.getElementById(`assetInfoInput_${numAssetFields}`);
     newInputField.addEventListener("focusout", (event) => {
-        if(event.target.value.length >= 1) {
+        if(event.target.value.length >= 3) {
             
-            const existingAssetNameFields = document.querySelectorAll(`[id^="assetnameInput_"]`);
+            // do not create new input field if there are 5 as this is the max allowed by the fingerprint API
+            if(numAssetFields == 5) return;
+
+            const existingAssetNameFields = document.querySelectorAll(`[id^="assetInfoInput_"]`);
             // since we are rebuilding the HTML, we need to save the values 
             const values = {};
             existingAssetNameFields.forEach((userItem) => {
@@ -1620,7 +1633,7 @@ function addAssetNameField(themeclass, elemid) {
             });
 
             // adding the new field to the HTML
-            addAssetNameField(`${themeclass}`, `${elemid}`);
+            addAssetInfoField(`${themeclass}`, `${elemid}`);
             setFieldInactive(`${numAssetFields}`);
 
             // reseting values now that the HTML has been rebuilt
@@ -1632,13 +1645,13 @@ function addAssetNameField(themeclass, elemid) {
     newInputField.addEventListener("focus", (event) => {
         setFieldActive(`${numAssetFields}`)
     });
-    // newInputField.addEventListener("input", (event) => {
-    //     console.log('input event '+ event.target.value);
-    //     if(event.target.value.length >= 1) {
-    //         // user has input something in the asset name field. Add one additional field
-    //         addAssetNameField(`${themeclass}`, `${elemid}`);
-    //     }
-    // });
+    newInputField.addEventListener("input", (event) => {
+        if(event.target.value.length >= 3) {
+            // user has input something in the asset field. Add one additional field (fired when removing focus of current field)
+            document.getElementById(event.target.id).blur();
+        }
+    });
+    return true;
     
 }
 
@@ -1646,7 +1659,13 @@ try {
     module.exports = {
         isHex: isHex,
         decodeObject: decodeObject,
-        isObject: isObject
+        isObject: isObject,
+        cip25Compliance: cip25Compliance,
+        cip27Compliance: cip27Compliance,
+        cip68Compliance: cip68Compliance,
+        cip88Compliance: cip88Compliance,
+        cip68RefTokenLabelUTF8: cip68RefTokenLabelUTF8,
+        cip68UserTokenLabelsUTF8: cip68UserTokenLabelsUTF8
     };
 }
 catch(err) {}

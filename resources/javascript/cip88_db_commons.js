@@ -3,15 +3,10 @@ const { stringify } = require('querystring');
 const cip88 = require("./cip88.js");
 const path = require("path");
 
-// const kupo_environment = 'mainnet';
-const kupo_environment = 'preprod';
-const cip88CertificatesDbName = `cip88Certificates-${kupo_environment}.db`;
-const cip88CertificatesDbPath = path.join(__dirname, '..', cip88CertificatesDbName)
+const cip88CertificatesDbPath = path.join(__dirname, '..', `cip88Certificates.db`)
 
 function addCertificateToDb(slot, txid, metadata) {
 
-    console.log('addCertificateToDb', JSON.stringify(metadata));
-    
     const db = new sqlite3.Database(cip88CertificatesDbPath, sqlite3.OPEN_READWRITE, (err) => {
         if (err) return console.error(err.message);
     });

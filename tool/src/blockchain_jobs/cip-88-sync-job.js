@@ -10,14 +10,14 @@ const kupo_api_url = 'http://127.0.0.1:1442';
 // This is a beta version of the sync. Still some issues to make it behave perfectly, but is good enough to start using
 
 const job = schedule.scheduleJob('*/1 * * * *', () => {
-    //console.log('Running cip 88 sync task every minute');
+    console.log('Running cip 88 certificate sync job');
 
     // cip88DbCommons.removeCIP88CertificatesTable();
     // cip88DbCommons.createCIP88CertificatesTable();
     
     readNewCertificatesFromChain();
 
-    // cip88DbCommons.getNLastCertsFromDb(10, (certificates) => {
+    // cip88DbCommons.getNLastCertsFromDb(100, (certificates) => {
     //     certificates.forEach((cert) => {
     //         console.log(JSON.stringify(cert));
     //     });
@@ -53,7 +53,8 @@ function processCIP88Metadata(slot, txid, metadata) {
         cip88DbCommons.addCertificateToDb(slot, txid, metadataDecoded);
     }
     else {
-        // Do we insert invalid certificates in the database? Currently we do not
+        // Do we insert invalid certificates in the database? 
+        // Currently 'isValidCIP88Certificate' function allows all to pass
         console.log('invalid certificate ' + JSON.stringify(metadataDecoded));
     }
 }
@@ -62,11 +63,8 @@ async function readNewCertificatesFromChain() {
 
     cip88DbCommons.getSlotOfLastCert((slot) => {
 
-        var created_after = 52600000;
-        if (slot > -1) {
-            created_after = slot + 1;
-        }
-
+        created_after = slot + 1;
+        
         var xhrTxs = new XMLHttpRequest();
         xhrTxs.onload = async function () {
 
@@ -76,7 +74,8 @@ async function readNewCertificatesFromChain() {
 
                 // extract values
                 var tx;
-                for (var i = 0; i < cip88MetadataList.length; i++) {
+                for (var i = 0; i < cip88MetadataList.length && i < 100; i++) {
+                    // processing max 100 certificates per sync session
                     tx = cip88MetadataList[i]
                     if (tx != null) {
                         getMetadata(tx.created_at.slot_no, tx.transaction_id, processCIP88Metadata);
